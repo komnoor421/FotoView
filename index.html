@@ -12,10 +12,34 @@
   </head>
   <body>
 
-    <h1 class="text-center">FotoView</h1>
-    <h2 class="text-center">Pick User</h2>
+    <h1 class="text-center"><u>FotoView</u></h1>
 
-    <ul id="users" class="text-center list-group"></ul>
+    <!-- USERS VIEW -->
+    <div id="UserContainer">
+      <h2 class="pageHeadline text-center">Pick User</h2>
+      <div class="container">
+        <div id="users" class="text-center"></div>
+      </div>
+    </div>
+
+    <!-- ALBUM VIEW -->
+    <div id="AlbumContainer">
+      <h2 class="pageHeadline text-center">Pick Album</h2>
+      <div class="container">
+        <div id="albums"></div>
+      </div>
+      <div class="back userBack"><span class="glyphicon glyphicon-arrow-left text-center"></span>Back To Users</div>
+    </div>
+
+    <!-- PHOTO VIEW -->
+    <div id="PhotoContainer">
+      <h2 class="pageHeadline text-center">View Photos</h2>
+      <div class="container">
+        <div id="photos"></div>
+        <div class="back albumBack"><span class="glyphicon glyphicon-arrow-left text-center"></span>Back To Albums</div>
+      </div>
+    </div>
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
