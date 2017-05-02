@@ -109,7 +109,7 @@ $(function () {
         console.log("Photos Connection Successful");
         $.each(photos, function(i, photo) {
           console.log(photo);
-          $photos.append('<img class="photoTile photo_' + photo.id + '" src="' + photo.thumbnailUrl + '">');
+          $photos.append('<a href="' + photo.url + '" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile photo_' + photo.id + '" src="' + photo.thumbnailUrl + '"></a>');
         });
       }
     });
