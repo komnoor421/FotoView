@@ -56,12 +56,17 @@ $(function () {
           displayAlbums(userID, albums);
         }
       });
-      //store userID in view
-      $('#AlbumContainer').data("userid", userID);
     }
     //hide other views
     $('#UserContainer').hide();
     $('#PhotoContainer').hide();
+  }
+
+  //album sorting function
+  function sortAlbums(){
+    $('#albums .albumTile').sort(function (a,b) {
+      return parseInt(a.dataset.albumid) - parseInt(b.dataset.albumid)
+    }).appendTo('#albums');
   }
 
   //Accessing photos api for each album thumbnail
@@ -71,12 +76,13 @@ $(function () {
       $.ajax({
         type: 'GET',
         datatype: 'json',
-        async: false,
         url: _root + "photos?albumId=" + album.id,
         success: function(photos) {
           //retreiving thumbnail from first photo in album
           var albumThumbSrc = photos[0].thumbnailUrl;
           $albumsDiv.append('<img class="albumTile" data-userid="' + userID + '" data-albumid="' + album.id + '" src="' + albumThumbSrc + '">');
+          //sorts albums in order by albumid data attribute while building DOM
+          sortAlbums();
         }
       });
     });
@@ -110,7 +116,7 @@ $(function () {
       success: function(photos) {
         console.log("Photos Connection Successful");
         $.each(photos, function(i, photo) {
-          $photos.append('<a href="' + photo.url + '" class="photoLink" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile photo_' + photo.id + '" src="' + photo.thumbnailUrl + '"></a>');
+          $photos.append('<a href="' + photo.url + '" class="photoLink" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile" src="' + photo.thumbnailUrl + '"></a>');
         });
       }
     });
