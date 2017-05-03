@@ -1,12 +1,13 @@
 $(function () {
 
-  var _root = "http://jsonplaceholder.typicode.com/";
+  var _root = "https://jsonplaceholder.typicode.com/";
   var _initialView = true;
 
   /* USER PAGE FUNCTIONS */
 
   //User view definition
   function userView(initialView){
+    //show user view
     $('#UserContainer').show();
     if(initialView){
       var $users = $('#users');
@@ -14,7 +15,7 @@ $(function () {
         type: 'GET',
         url: _root + "users",
         success: function(users) {
-          console.log("Users API Connection Successful :) ");
+          console.log("Users API Connection Successful :)");
           $.each(users, function(i, user) {
             //Creates list of user buttons & storing userid in data attribute of each element
             $users.append('<button type="button" data-userid="' + user.id + '" class="userButton btn btn-default btn-block">' + user.name + '</button>');
