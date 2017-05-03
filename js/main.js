@@ -14,17 +14,21 @@ $(function () {
         type: 'GET',
         url: _root + "users",
         success: function(users) {
-          console.log("Users Connection Successful");
+          console.log("Users API Connection Successful :) ");
           $.each(users, function(i, user) {
             //Creates list of user buttons & storing userid in data attribute of each element
             $users.append('<button type="button" data-userid="' + user.id + '" class="userButton btn btn-default btn-block">' + user.name + '</button>');
           });
+        },
+        error: function(){
+          alert("Error loading Users :(");
         }
       });
     }
     //hide other views
     $('#AlbumContainer').hide();
     $('#PhotoContainer').hide();
+    console.log("User View loaded!")
   }
 
   //Initializing list of users on pageload
@@ -34,6 +38,7 @@ $(function () {
   $('#users').on('click', '.userButton', function () {
     //retrieves userid from data attr
     var userID = $(this).data("userid");
+    console.log("Clicked on User ID: " + userID);
     _initialView = true;
     albumView(userID, _initialView);
   });
@@ -52,14 +57,18 @@ $(function () {
         datatype: 'json',
         url: _root + "albums?userId=" + userID,
         success: function(albums) {
-          console.log("Album Connection Successful");
+          console.log("Album API Connection Successful :)");
           displayAlbums(userID, albums);
+        },
+        error: function(){
+          alert("Error loading Albums :(");
         }
       });
     }
     //hide other views
     $('#UserContainer').hide();
     $('#PhotoContainer').hide();
+    console.log("Album View Loaded! Showing albums from User ID: " + userID);
   }
 
   //album sorting function
@@ -83,6 +92,9 @@ $(function () {
           $albumsDiv.append('<img class="albumTile" data-userid="' + userID + '" data-albumid="' + album.id + '" src="' + albumThumbSrc + '">');
           //sorts albums in order by albumid data attribute while building DOM
           sortAlbums();
+        },
+        error: function(){
+          alert("Error loading photos for album thumbnail :(");
         }
       });
     });
@@ -93,11 +105,13 @@ $(function () {
     var $this = $(this);
     var albumID = $this.data("albumid")
     var userID = $this.data("userid");
+    console.log("Clicked on Album ID: " + albumID + " from User ID: " + userID);
     photoView(albumID, userID);
   });
 
   //Event handler for back button on albums view
   $('.userBack').click(function() {
+    console.log("Went back to Users View <<");
     _initialView = false;
     userView(_initialView);
   });
@@ -114,19 +128,29 @@ $(function () {
       type: 'GET',
       url: _root + "photos?albumId=" + albumID,
       success: function(photos) {
-        console.log("Photos Connection Successful");
+        console.log("Photos API Connection Successful :)");
         $.each(photos, function(i, photo) {
-          $photos.append('<a href="' + photo.url + '" class="photoLink" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile" src="' + photo.thumbnailUrl + '"></a>');
+          $photos.append('<a href="' + photo.url + '" class="photoLink" data-photoid="' + photo.id + '" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile" src="' + photo.thumbnailUrl + '"></a>');
         });
+      },
+      error: function(){
+        alert("Error loading Photos :(");
       }
     });
     //store userID in view
     $('#PhotoContainer').data("userid", userID);
     $('#AlbumContainer').hide();
+    console.log("Photo View Loaded! Showing photos from Album ID: " + albumID + " from User ID: " + userID);
   }
+
+  //logging when photo clicked
+  $('#photos').on('click', '.photoLink', function () {
+    console.log("Clicked on Photo ID: " + $(this).data("photoid"));
+  });
 
   //event handler for back button on photos view
   $('.albumBack').click(function() {
+    console.log("Went back to Albums View <<");
     var userID = $('#PhotoContainer').data("userid");
     _initialView = false;
     albumView(userID, _initialView);
