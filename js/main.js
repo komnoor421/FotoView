@@ -3,11 +3,12 @@ $(function () {
   var _root = "http://jsonplaceholder.typicode.com/";
   var _initialView = true;
 
+  /* USER PAGE FUNCTIONS */
+
+  //User view definition
   function userView(initialView){
     $('#UserContainer').show();
-
     if(initialView){
-      //$('.userButton').remove();
       var $users = $('#users');
       $.ajax({
         type: 'GET',
@@ -15,23 +16,24 @@ $(function () {
         success: function(users) {
           console.log("Users Connection Successful");
           $.each(users, function(i, user) {
+            //Creates list of user buttons
             $users.append('<button type="button" name="' + user.id + '" class="userButton btn btn-default btn-block">' + user.name + '</button>');
           });
         }
       });
     }
-
+    //hide other views
     $('#AlbumContainer').hide();
     $('#PhotoContainer').hide();
   }
 
+  //Initializing list of users on pageload
   userView(_initialView);
 
+  //When user button clicked, initiates Albums View
   $('#users').on('click', '.userButton', function () {
     var $this = $(this);
-    //console.log($this.attr('name'));
     var userID = getUserId($this);
-    //console.log(userID);
     _initialView = true;
     albumView(userID, _initialView);
   });
@@ -40,12 +42,15 @@ $(function () {
     return user.attr('name');
   }
 
-  function albumView(userID, initialView) {
-    $('#AlbumContainer').show();
+  ///* ALBUM PAGE FUNCTIONS *///
 
+  //Album View definition
+  function albumView(userID, initialView) {
+    //show album view
+    $('#AlbumContainer').show();
     if (initialView) {
       $('.albumTile').remove();
-      //var $albums = $('#albums');
+      //accessing albums api for albums with userID parameter
       $.ajax({
         type: 'GET',
         datatype: 'json',
@@ -55,13 +60,15 @@ $(function () {
           displayAlbums(albums);
         }
       });
+      //store userID from album
       $('#AlbumContainer').data("userid", userID);
     }
-
+    //hide other views
     $('#UserContainer').hide();
     $('#PhotoContainer').hide();
   }
 
+  //Accessing photos api for each album thumbnail
   function displayAlbums(albums) {
     var $albumsDiv = $('#albums');
     $.each(albums, function(i, album){
@@ -71,7 +78,7 @@ $(function () {
         async: false,
         url: _root + "photos?albumId=" + album.id,
         success: function(photos) {
-          //console.log(photos[0]);
+          //retreiving thumbnail from first photo in album
           var albumThumbSrc = photos[0].thumbnailUrl;
           $albumsDiv.append('<img class="albumTile album_' + album.id + '" src="' + albumThumbSrc + '">');
         }
@@ -79,10 +86,10 @@ $(function () {
     });
   }
 
+  //When album clicked, initiates Photos view
   $('#albums').on('click', '.albumTile', function() {
     var $this = $(this);
     var albumID = getAlbumId($this);
-    //console.log(albumID);
     var userID = $('#AlbumContainer').data("userid");
     photoView(albumID, userID);
   });
@@ -93,14 +100,18 @@ $(function () {
     return albumID[1];
   }
 
+  //Event handler for back button on albums view
   $('.userBack').click(function() {
     _initialView = false;
     userView(_initialView);
   });
 
+  ///* PHOTO PAGE FUNCTIONS *///
+
+  //Photo View definition
   function photoView(albumID, userID) {
     $('#PhotoContainer').show();
-    $('.photoTile').remove();
+    $('.photoLink').remove();
     var $photos = $('#photos');
     $.ajax({
       type: 'GET',
@@ -108,12 +119,11 @@ $(function () {
       success: function(photos) {
         console.log("Photos Connection Successful");
         $.each(photos, function(i, photo) {
-          console.log(photo);
-          $photos.append('<a href="' + photo.url + '" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile photo_' + photo.id + '" src="' + photo.thumbnailUrl + '"></a>');
+          $photos.append('<a href="' + photo.url + '" class="photoLink" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile photo_' + photo.id + '" src="' + photo.thumbnailUrl + '"></a>');
         });
       }
     });
-
+    //store userID 
     $('#PhotoContainer').data("userid", userID);
     $('#AlbumContainer').hide();
   }
@@ -123,7 +133,4 @@ $(function () {
     _initialView = false;
     albumView(userID, _initialView);
   });
-
-
-
 });
