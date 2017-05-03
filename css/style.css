@@ -1,28 +1,18 @@
+/* GLOBAL CSS */
 .pageHeadline {
     margin: 30px 0px 30px 0px;
 }
 
-#users li {
-  font-size: 20px;
-}
-
-.glyphicon {
-  display: block;
-  font-size: 4em;
-}
-
+/* USER PAGE CSS */
 .userButton {
   margin: 0px auto 10px auto;
   width: 50%;
   font-size: 20px;
 }
 
-.back {
-  display: inline-block;
-  cursor: pointer;
-  position: fixed;
-  bottom: 25px;
-  left: 20px;
+/* ALBUM & PHOTO PAGE CSS */
+#photos, #albums {
+  margin-right: -15px;
 }
 
 .albumTile, .photoTile {
@@ -40,11 +30,20 @@
   opacity: 0.3;
 }
 
-#photos, #albums {
-  margin-right: -15px;
-}
-
 img {
   max-width: 100%;
   height: auto;
+}
+
+.back {
+  display: inline-block;
+  cursor: pointer;
+  position: fixed;
+  bottom: 25px;
+  left: 20px;
+}
+
+.glyphicon {
+  display: block;
+  font-size: 4em;
 }

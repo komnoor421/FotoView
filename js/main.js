@@ -16,8 +16,8 @@ $(function () {
         success: function(users) {
           console.log("Users Connection Successful");
           $.each(users, function(i, user) {
-            //Creates list of user buttons
-            $users.append('<button type="button" name="' + user.id + '" class="userButton btn btn-default btn-block">' + user.name + '</button>');
+            //Creates list of user buttons & storing userid in data attribute of each element
+            $users.append('<button type="button" data-userid="' + user.id + '" class="userButton btn btn-default btn-block">' + user.name + '</button>');
           });
         }
       });
@@ -32,15 +32,11 @@ $(function () {
 
   //When user button clicked, initiates Albums View
   $('#users').on('click', '.userButton', function () {
-    var $this = $(this);
-    var userID = getUserId($this);
+    //retrieves userid from data attr
+    var userID = $(this).data("userid");
     _initialView = true;
     albumView(userID, _initialView);
   });
-
-  function getUserId(user){
-    return user.attr('name');
-  }
 
   ///* ALBUM PAGE FUNCTIONS *///
 
@@ -57,10 +53,10 @@ $(function () {
         url: _root + "albums?userId=" + userID,
         success: function(albums) {
           console.log("Album Connection Successful");
-          displayAlbums(albums);
+          displayAlbums(userID, albums);
         }
       });
-      //store userID from album
+      //store userID in view
       $('#AlbumContainer').data("userid", userID);
     }
     //hide other views
@@ -69,7 +65,7 @@ $(function () {
   }
 
   //Accessing photos api for each album thumbnail
-  function displayAlbums(albums) {
+  function displayAlbums(userID, albums) {
     var $albumsDiv = $('#albums');
     $.each(albums, function(i, album){
       $.ajax({
@@ -80,7 +76,7 @@ $(function () {
         success: function(photos) {
           //retreiving thumbnail from first photo in album
           var albumThumbSrc = photos[0].thumbnailUrl;
-          $albumsDiv.append('<img class="albumTile album_' + album.id + '" src="' + albumThumbSrc + '">');
+          $albumsDiv.append('<img class="albumTile" data-userid="' + userID + '" data-albumid="' + album.id + '" src="' + albumThumbSrc + '">');
         }
       });
     });
@@ -89,16 +85,10 @@ $(function () {
   //When album clicked, initiates Photos view
   $('#albums').on('click', '.albumTile', function() {
     var $this = $(this);
-    var albumID = getAlbumId($this);
-    var userID = $('#AlbumContainer').data("userid");
+    var albumID = $this.data("albumid")
+    var userID = $this.data("userid");
     photoView(albumID, userID);
   });
-
-  function getAlbumId(album) {
-    var albumID = album.attr('class');
-    albumID = albumID.split('_');
-    return albumID[1];
-  }
 
   //Event handler for back button on albums view
   $('.userBack').click(function() {
@@ -113,6 +103,7 @@ $(function () {
     $('#PhotoContainer').show();
     $('.photoLink').remove();
     var $photos = $('#photos');
+    //accessing photos api for photos in album with albumID parameter
     $.ajax({
       type: 'GET',
       url: _root + "photos?albumId=" + albumID,
@@ -123,11 +114,12 @@ $(function () {
         });
       }
     });
-    //store userID 
+    //store userID in view
     $('#PhotoContainer').data("userid", userID);
     $('#AlbumContainer').hide();
   }
 
+  //event handler for back button on photos view
   $('.albumBack').click(function() {
     var userID = $('#PhotoContainer').data("userid");
     _initialView = false;
