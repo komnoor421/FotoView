@@ -3,6 +3,8 @@ by Komron Noorbakhsh
 
 Preview here : https://komnoor421.github.io/FotoView/
 
+APIs: http://jsonplaceholder.typicode.com/ - /users, /photos, /albums (fake data & placeholder images)
+
 Languages: HTML5, CSS3, Javascript
 
 Libraries/Frameworks: Jquery 3.2.1, Bootstrap 3.3.1
