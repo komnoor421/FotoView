@@ -133,7 +133,7 @@ $(function () {
         console.log("Photos API Connection Successful :)");
         $.each(photos, function(i, photo) {
           const photoUrl = parsePhotoUrl(photo.thumbnailUrl, photo.id);
-          $photos.append('<a href="' + photo.url + '" class="photoLink" data-photoid="' + photo.id + '" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile" src="' + photoUrl + '"></a>');
+          $photos.append(`<a href="${photoUrl}" data-lightbox="photoimage" data-photoid="${photo.id}" data-title="${photo.title}"><img class="photoTile" alt="Photo Image" src="${photoUrl}"></a>`);
         });
       },
       error: function(){
@@ -166,6 +166,9 @@ $(function () {
     const params = new URLSearchParams(url.search);
     params.set('text', `${id}`);
     url.search = params.toString();
+    const pathnameArray = url.pathname.split('/');
+    pathnameArray[1] = '500';
+    url.pathname = pathnameArray.join('/');
     return url.href;
   }
 });
