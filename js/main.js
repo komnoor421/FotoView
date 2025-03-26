@@ -1,7 +1,8 @@
 $(function () {
 
-  var _root = "https://jsonplaceholder.typicode.com/";
-  var _initialView = true;
+  const _root = "https://jsonplaceholder.typicode.com/";
+  const _placeholderImgHostname = 'placehold.co'
+  let _initialView = true;
 
   /* USER PAGE FUNCTIONS */
 
@@ -89,7 +90,7 @@ $(function () {
         url: _root + "photos?albumId=" + album.id,
         success: function(photos) {
           //retreiving thumbnail from first photo in album
-          var albumThumbSrc = photos[0].thumbnailUrl;
+          const albumThumbSrc = parsePhotoUrl(photos[0].thumbnailUrl, album.id);
           $albumsDiv.append('<img class="albumTile" data-userid="' + userID + '" data-albumid="' + album.id + '" src="' + albumThumbSrc + '">');
           //sorts albums in order by albumid data attribute while building DOM
           sortAlbums();
@@ -131,7 +132,8 @@ $(function () {
       success: function(photos) {
         console.log("Photos API Connection Successful :)");
         $.each(photos, function(i, photo) {
-          $photos.append('<a href="' + photo.url + '" class="photoLink" data-photoid="' + photo.id + '" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile" src="' + photo.thumbnailUrl + '"></a>');
+          const photoUrl = parsePhotoUrl(photo.thumbnailUrl, photo.id);
+          $photos.append('<a href="' + photo.url + '" class="photoLink" data-photoid="' + photo.id + '" data-lightbox="gallery" data-title="' + photo.title + '"><img class="photoTile" src="' + photoUrl + '"></a>');
         });
       },
       error: function(){
@@ -156,4 +158,14 @@ $(function () {
     _initialView = false;
     albumView(userID, _initialView);
   });
+
+  function parsePhotoUrl(photoURL, id) {
+    const url = new URL(photoURL);
+    url.hostname = _placeholderImgHostname;
+    url.pathname += '/white';
+    const params = new URLSearchParams(url.search);
+    params.set('text', `${id}`);
+    url.search = params.toString();
+    return url.href;
+  }
 });
